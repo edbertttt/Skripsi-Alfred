@@ -1,0 +1,14 @@
+bab,step,notebook_cell,status,evidence
+Bab 3.6.1,Pengumpulan data BTCUSDT daily melalui API Binance dengan pagination,Cell 05,Sesuai,fetch_binance_klines mengambil OHLCV harian realtime dan menyimpan snapshot raw/modeling.
+Bab 3.6.2,"Pre-processing: missing value, duplikasi timestamp, urutan tanggal, validitas close/volume",Cell 06,Sesuai,"validation memeriksa missing calendar days, duplicate_dates, index_monotonic, bad close, bad volume."
+Bab 2.3.1 / 3.4,Membentuk return log harian dari close price dan loss = -return,Cell 05,Sesuai,"ret_log = log(close/close.shift(1)); loss, ret_sq, abs_ret dibentuk untuk risiko dan diagnostik volatilitas."
+Bab 2.3.1 / 3.5,"Analisis deskriptif, tail behavior, dan indikasi heavy-tail","Cell 07, 11",Sesuai,"Plot harga/return, statistik mean-std-min-max, skewness, kurtosis, Jarque-Bera, dan quantile ekstrem."
+Bab 2.3.1,Uji stasioneritas return dengan ADF sebelum pemodelan deret waktu,Cell 09,Sesuai,ADF dijalankan pada data train; KPSS ditambahkan sebagai pemeriksaan pendukung.
+Bab 2.3.2 / 2.3.3,Uji autokorelasi dan volatility clustering dengan Ljung-Box serta ARCH-LM,"Cell 10, 13",Sesuai,"Ljung-Box pada return dan squared return, ARCH-LM pada return demeaned, serta Ljung-Box residual ARMA."
+Bab 2.3.2 / 3.6.4,Mean filtering memakai ARMA sebelum pemodelan volatilitas,"Cell 12, 13",Sesuai,Order ARMA dipilih pada data training berdasarkan AIC; residual ARMA digunakan sebagai input model volatilitas.
+Bab 2.3.4 / 2.3.5 / 3.6.4,"MS-GARCH dua rezim dengan peluang transisi, probabilitas filtered/smoothed, dan volatilitas bersyarat","Cell 14, 15, 17",Sesuai setelah perbaikan,Parameter GARCH per state dan transition matrix diestimasi bersama; filtered dan smoothed probability dibuat eksplisit.
+Bab 2.3.6 / 3.6.4,Stochastic Volatility Student-t dengan latent volatility path dan ketidakpastian posterior,"Cell 18, 19, 20, 21",Sesuai setelah perbaikan,SV memakai Student-t observation model; posterior parameter dan latent sigma path mean/q025/q975 dibuat eksplisit.
+Bab 2.3.7 / 3.6.5,VaR dan CVaR dari distribusi prediktif return satu hari ke depan,"Cell 17, 21, 23, 24",Sesuai,Rolling OOS dan next-day forecast memakai simulasi distribusi return untuk VaR/CVaR 95% dan 99%.
+Bab 2.3.8 / 3.6.5,Backtesting out-of-sample: breach count/rate dan Kupiec coverage test,"Cell 27, 28",Sesuai,Kupiec unconditional coverage dihitung; Christoffersen independence ditambahkan untuk mengecek clustering breach.
+Bab 3.6.6,"Evaluasi perbandingan MS-GARCH vs SV berdasarkan backtesting, CVaR, dan stabilitas hasil","Cell 29, 30, 31, 35, 36",Sesuai,comparison_rank dan best_by_confidence merangkum model terbaik per confidence level.
+Bab 3.6.7,Dashboard reporting and result presentation,Output reporting,Documented,"CSV dan JSON hasil pemodelan diekspor untuk pelaporan, validasi, dan visualisasi hasil penelitian."

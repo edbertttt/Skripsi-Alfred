@@ -1,0 +1,2 @@
+symbol,last_price,price_change_24h,price_change_percent_24h,high_24h,low_24h,volume_btc_24h,quote_volume_usdt_24h,trade_count_24h,updated_at_utc
+BTCUSDT,63272.06,1734.06,0.02818,64234.68,61184.0,27013.02304,1687360886.6747348,5017660,2026-06-08 03:17:44.011000+00:00

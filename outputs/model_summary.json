@@ -1,0 +1,565 @@
+{
+  "data_source": {
+    "source": "Binance REST API /api/v3/klines",
+    "symbol": "BTCUSDT",
+    "interval": "1d",
+    "start_utc": "2017-08-17 00:00:00",
+    "end_utc": null,
+    "include_open_candle": false,
+    "raw_snapshot": "data/btcusdt_1d_realtime_raw.csv",
+    "modeling_snapshot": "data/btcusdt_1d_realtime_modeling.csv"
+  },
+  "data_validation": {
+    "start": "2017-08-18T00:00:00+00:00",
+    "end": "2026-06-07T00:00:00+00:00",
+    "n_rows": 3216,
+    "index_monotonic": true,
+    "duplicate_dates": 0,
+    "missing_calendar_days": 0,
+    "bad_close_values": 0,
+    "bad_volume_values": 0,
+    "return_na": 0
+  },
+  "diagnostics": {
+    "stationarity": [
+      {
+        "test": "ADF",
+        "statistic": -33.36781353630251,
+        "p_value": 0.0
+      },
+      {
+        "test": "KPSS",
+        "statistic": 0.08050062393088234,
+        "p_value": 0.1
+      }
+    ],
+    "ljung_box_return": [
+      {
+        "index": 10,
+        "lb_stat": 20.43736774345718,
+        "lb_pvalue": 0.02537700962071196
+      },
+      {
+        "index": 20,
+        "lb_stat": 33.53442459557875,
+        "lb_pvalue": 0.02945212297976625
+      },
+      {
+        "index": 40,
+        "lb_stat": 65.52000746327646,
+        "lb_pvalue": 0.006649610062280737
+      }
+    ],
+    "ljung_box_squared_return": [
+      {
+        "index": 10,
+        "lb_stat": 53.72307929918431,
+        "lb_pvalue": 5.463871402331176e-08
+      },
+      {
+        "index": 20,
+        "lb_stat": 71.66295342707417,
+        "lb_pvalue": 9.725008622424779e-08
+      },
+      {
+        "index": 40,
+        "lb_stat": 89.74474219866994,
+        "lb_pvalue": 1.1040092178057709e-05
+      }
+    ],
+    "arch_lm": [
+      {
+        "lm_stat": 47.32190190227658,
+        "lm_pvalue": 4.099716308391268e-06,
+        "f_stat": 4.003177606734335,
+        "f_pvalue": 3.6004406819306274e-06
+      }
+    ],
+    "distribution_tail": [
+      {
+        "mean": 0.000983781525297897,
+        "std": 0.03906276446721753,
+        "min": -0.5026069427414592,
+        "max": 0.20295221522828027,
+        "skewness": -1.0295693088205216,
+        "kurtosis": 17.721386145734094,
+        "jb_stat": 21423.841768239385,
+        "jb_pvalue": 0.0
+      }
+    ]
+  },
+  "split": {
+    "split_date": "2024-01-01",
+    "train_start": "2017-08-18T00:00:00+00:00",
+    "train_end": "2023-12-31T00:00:00+00:00",
+    "train_n": 2327,
+    "test_start": "2024-01-01T00:00:00+00:00",
+    "test_end": "2026-06-07T00:00:00+00:00",
+    "test_n": 889
+  },
+  "arma": {
+    "selected_order": [
+      0,
+      0,
+      2
+    ],
+    "aic": -8491.047876533303,
+    "bic": -8468.038535880094,
+    "residual_ljung_box": [
+      {
+        "index": 10,
+        "lb_stat": 10.304695776301537,
+        "lb_pvalue": 0.4141802759632442
+      },
+      {
+        "index": 20,
+        "lb_stat": 22.02223846663838,
+        "lb_pvalue": 0.339305142831463
+      },
+      {
+        "index": 40,
+        "lb_stat": 51.80871867770185,
+        "lb_pvalue": 0.0999395216275613
+      }
+    ]
+  },
+  "regime_garch": {
+    "method": "Two-state Markov-Switching GARCH(1,1)-Student-t via Hamilton filter / Gray variance approximation",
+    "loglik": -5971.616993099634,
+    "aic": 11963.233986199268,
+    "bic": 12020.75733783229,
+    "converged": true,
+    "optimizer_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "transition_matrix": [
+      [
+        0.9930457087218629,
+        0.00695429127813707
+      ],
+      [
+        0.009300448300473496,
+        0.9906995516995265
+      ]
+    ],
+    "state_names": [
+      "low_vol",
+      "high_vol"
+    ],
+    "high_vol_state": 1,
+    "garch_params": [
+      {
+        "state": "low_vol",
+        "omega": 0.3262005630935517,
+        "alpha": 0.04400603797056111,
+        "beta": 0.94215882134402,
+        "nu": 4.500639310264252,
+        "persistence": 0.9861648593145811,
+        "unconditional_variance": 23.57768312665877,
+        "h_last": 8.930818331813954,
+        "n_obs": 2327
+      },
+      {
+        "state": "high_vol",
+        "omega": 0.47003558534254974,
+        "alpha": 0.08263517857892744,
+        "beta": 0.9163557337963489,
+        "nu": 2.3177675799026267,
+        "persistence": 0.9989909123752764,
+        "unconditional_variance": 465.80254660370605,
+        "h_last": 9.405522259010954,
+        "n_obs": 2327
+      }
+    ],
+    "last_filtered_probability": {
+      "p_low_vol": 0.3214930388702534,
+      "p_high_vol": 0.6785069611297467
+    },
+    "last_smoothed_probability": {
+      "p_low_vol_smooth": 0.3214930388702534,
+      "p_high_vol_smooth": 0.6785069611297467
+    },
+    "filtered_probability_file": "outputs_optimized_notebook/ms_garch_filtered_probabilities_train.csv",
+    "smoothed_probability_file": "outputs_optimized_notebook/ms_garch_smoothed_probabilities_train.csv"
+  },
+  "stochastic_volatility": {
+    "available": true,
+    "elapsed_seconds": 35.38713258301141,
+    "latent_volatility_path_available": true,
+    "latent_volatility_rows": 2327,
+    "latest_sigma_mean": 0.016061609610915184,
+    "posterior_means": {
+      "h_0": -7.38046407699585,
+      "mu_h": -7.645362377166748,
+      "nu": 3.2354061603546143,
+      "nu_minus_two": 1.18540620803833,
+      "phi_h": 0.984495997428894,
+      "sigma_h": 0.1683737188577652
+    },
+    "posterior_parameter_file": "outputs_optimized_notebook/sv_posterior_parameter_summary.csv",
+    "latent_volatility_file": "outputs_optimized_notebook/sv_latent_volatility_train.csv"
+  },
+  "backtesting": [
+    {
+      "model": "MS_GARCH",
+      "confidence": 0.95,
+      "n_obs": 889,
+      "expected_breaches": 44.45000000000004,
+      "breach_count": 43,
+      "breach_rate": 0.048368953880764905,
+      "mean_var": 0.04212888076078625,
+      "mean_cvar": 0.06772275075754838,
+      "max_loss": 0.15102560052391373,
+      "kupiec_lr_uc": 0.050311289032549666,
+      "kupiec_pvalue": 0.8225224903498025,
+      "christoffersen_lr_ind": 0.3980482216791188,
+      "christoffersen_pvalue": 0.5280989616867591,
+      "christoffersen_cc_lr": 0.44835951071166846,
+      "christoffersen_cc_pvalue": 0.7991714661059196,
+      "coverage_pass_5pct": true,
+      "independence_pass_5pct": true,
+      "conditional_coverage_pass_5pct": true
+    },
+    {
+      "model": "MS_GARCH",
+      "confidence": 0.99,
+      "n_obs": 889,
+      "expected_breaches": 8.890000000000008,
+      "breach_count": 3,
+      "breach_rate": 0.003374578177727784,
+      "mean_var": 0.07865978448944003,
+      "mean_cvar": 0.11942238589449115,
+      "max_loss": 0.15102560052391373,
+      "kupiec_lr_uc": 5.301441708822857,
+      "kupiec_pvalue": 0.021307780916182018,
+      "christoffersen_lr_ind": 0.020339022003533103,
+      "christoffersen_pvalue": 0.88659429521277,
+      "christoffersen_cc_lr": 5.32178073082639,
+      "christoffersen_cc_pvalue": 0.06988596998481889,
+      "coverage_pass_5pct": false,
+      "independence_pass_5pct": true,
+      "conditional_coverage_pass_5pct": true
+    },
+    {
+      "model": "SV",
+      "confidence": 0.95,
+      "n_obs": 889,
+      "expected_breaches": 44.45000000000004,
+      "breach_count": 51,
+      "breach_rate": 0.05736782902137233,
+      "mean_var": 0.03921841565219873,
+      "mean_cvar": 0.06386523701528032,
+      "max_loss": 0.15102560052391373,
+      "kupiec_lr_uc": 0.971919498171701,
+      "kupiec_pvalue": 0.32420192774213297,
+      "christoffersen_lr_ind": 2.876004903013097,
+      "christoffersen_pvalue": 0.08990883535708794,
+      "christoffersen_cc_lr": 3.847924401184798,
+      "christoffersen_cc_pvalue": 0.14602722521356726,
+      "coverage_pass_5pct": true,
+      "independence_pass_5pct": true,
+      "conditional_coverage_pass_5pct": true
+    },
+    {
+      "model": "SV",
+      "confidence": 0.99,
+      "n_obs": 889,
+      "expected_breaches": 8.890000000000008,
+      "breach_count": 7,
+      "breach_rate": 0.007874015748031496,
+      "mean_var": 0.07503373984455741,
+      "mean_cvar": 0.11129736133503168,
+      "max_loss": 0.15102560052391373,
+      "kupiec_lr_uc": 0.4378191884417504,
+      "kupiec_pvalue": 0.5081769226591304,
+      "christoffersen_lr_ind": 0.11123840087341819,
+      "christoffersen_pvalue": 0.7387386151336577,
+      "christoffersen_cc_lr": 0.5490575893151686,
+      "christoffersen_cc_pvalue": 0.7599301220062273,
+      "coverage_pass_5pct": true,
+      "independence_pass_5pct": true,
+      "conditional_coverage_pass_5pct": true
+    }
+  ],
+  "model_comparison": [
+    {
+      "model": "MS_GARCH",
+      "confidence": 0.95,
+      "n_obs": 889,
+      "expected_breaches": 44.45000000000004,
+      "breach_count": 43,
+      "breach_rate": 0.048368953880764905,
+      "mean_var": 0.04212888076078625,
+      "mean_cvar": 0.06772275075754838,
+      "max_loss": 0.15102560052391373,
+      "kupiec_lr_uc": 0.050311289032549666,
+      "kupiec_pvalue": 0.8225224903498025,
+      "christoffersen_lr_ind": 0.3980482216791188,
+      "christoffersen_pvalue": 0.5280989616867591,
+      "christoffersen_cc_lr": 0.44835951071166846,
+      "christoffersen_cc_pvalue": 0.7991714661059196,
+      "coverage_pass_5pct": true,
+      "independence_pass_5pct": true,
+      "conditional_coverage_pass_5pct": true,
+      "abs_breach_error": 1.4500000000000384,
+      "coverage_score": 0.032620922384702745,
+      "valid_backtest": true
+    },
+    {
+      "model": "SV",
+      "confidence": 0.95,
+      "n_obs": 889,
+      "expected_breaches": 44.45000000000004,
+      "breach_count": 51,
+      "breach_rate": 0.05736782902137233,
+      "mean_var": 0.03921841565219873,
+      "mean_cvar": 0.06386523701528032,
+      "max_loss": 0.15102560052391373,
+      "kupiec_lr_uc": 0.971919498171701,
+      "kupiec_pvalue": 0.32420192774213297,
+      "christoffersen_lr_ind": 2.876004903013097,
+      "christoffersen_pvalue": 0.08990883535708794,
+      "christoffersen_cc_lr": 3.847924401184798,
+      "christoffersen_cc_pvalue": 0.14602722521356726,
+      "coverage_pass_5pct": true,
+      "independence_pass_5pct": true,
+      "conditional_coverage_pass_5pct": true,
+      "abs_breach_error": 6.549999999999962,
+      "coverage_score": 0.14735658042744557,
+      "valid_backtest": true
+    },
+    {
+      "model": "SV",
+      "confidence": 0.99,
+      "n_obs": 889,
+      "expected_breaches": 8.890000000000008,
+      "breach_count": 7,
+      "breach_rate": 0.007874015748031496,
+      "mean_var": 0.07503373984455741,
+      "mean_cvar": 0.11129736133503168,
+      "max_loss": 0.15102560052391373,
+      "kupiec_lr_uc": 0.4378191884417504,
+      "kupiec_pvalue": 0.5081769226591304,
+      "christoffersen_lr_ind": 0.11123840087341819,
+      "christoffersen_pvalue": 0.7387386151336577,
+      "christoffersen_cc_lr": 0.5490575893151686,
+      "christoffersen_cc_pvalue": 0.7599301220062273,
+      "coverage_pass_5pct": true,
+      "independence_pass_5pct": true,
+      "conditional_coverage_pass_5pct": true,
+      "abs_breach_error": 1.8900000000000077,
+      "coverage_score": 0.21259842519685107,
+      "valid_backtest": true
+    },
+    {
+      "model": "MS_GARCH",
+      "confidence": 0.99,
+      "n_obs": 889,
+      "expected_breaches": 8.890000000000008,
+      "breach_count": 3,
+      "breach_rate": 0.003374578177727784,
+      "mean_var": 0.07865978448944003,
+      "mean_cvar": 0.11942238589449115,
+      "max_loss": 0.15102560052391373,
+      "kupiec_lr_uc": 5.301441708822857,
+      "kupiec_pvalue": 0.021307780916182018,
+      "christoffersen_lr_ind": 0.020339022003533103,
+      "christoffersen_pvalue": 0.88659429521277,
+      "christoffersen_cc_lr": 5.32178073082639,
+      "christoffersen_cc_pvalue": 0.06988596998481889,
+      "coverage_pass_5pct": false,
+      "independence_pass_5pct": true,
+      "conditional_coverage_pass_5pct": true,
+      "abs_breach_error": 5.890000000000008,
+      "coverage_score": 0.6625421822272219,
+      "valid_backtest": false
+    }
+  ],
+  "best_by_confidence": [
+    {
+      "model": "MS_GARCH",
+      "confidence": 0.95,
+      "n_obs": 889,
+      "expected_breaches": 44.45000000000004,
+      "breach_count": 43,
+      "breach_rate": 0.048368953880764905,
+      "mean_var": 0.04212888076078625,
+      "mean_cvar": 0.06772275075754838,
+      "max_loss": 0.15102560052391373,
+      "kupiec_lr_uc": 0.050311289032549666,
+      "kupiec_pvalue": 0.8225224903498025,
+      "christoffersen_lr_ind": 0.3980482216791188,
+      "christoffersen_pvalue": 0.5280989616867591,
+      "christoffersen_cc_lr": 0.44835951071166846,
+      "christoffersen_cc_pvalue": 0.7991714661059196,
+      "coverage_pass_5pct": true,
+      "independence_pass_5pct": true,
+      "conditional_coverage_pass_5pct": true,
+      "abs_breach_error": 1.4500000000000384,
+      "coverage_score": 0.032620922384702745,
+      "valid_backtest": true
+    },
+    {
+      "model": "SV",
+      "confidence": 0.99,
+      "n_obs": 889,
+      "expected_breaches": 8.890000000000008,
+      "breach_count": 7,
+      "breach_rate": 0.007874015748031496,
+      "mean_var": 0.07503373984455741,
+      "mean_cvar": 0.11129736133503168,
+      "max_loss": 0.15102560052391373,
+      "kupiec_lr_uc": 0.4378191884417504,
+      "kupiec_pvalue": 0.5081769226591304,
+      "christoffersen_lr_ind": 0.11123840087341819,
+      "christoffersen_pvalue": 0.7387386151336577,
+      "christoffersen_cc_lr": 0.5490575893151686,
+      "christoffersen_cc_pvalue": 0.7599301220062273,
+      "coverage_pass_5pct": true,
+      "independence_pass_5pct": true,
+      "conditional_coverage_pass_5pct": true,
+      "abs_breach_error": 1.8900000000000077,
+      "coverage_score": 0.21259842519685107,
+      "valid_backtest": true
+    }
+  ],
+  "next_day_forecast": [
+    {
+      "model": "MS_GARCH",
+      "forecast_date": "2026-06-08T00:00:00+00:00",
+      "last_close": 63332.01,
+      "mu_return": -0.001263114778371134,
+      "sigma_return": 0.03404237983415904,
+      "return_mean_sim": -0.0013320000737607103,
+      "return_median_sim": -0.0011012646921945359,
+      "loss_mean_sim": 0.0013320000737607103,
+      "predicted_close_mu": 63252.06490277103,
+      "predicted_close_median_sim": 63262.30308342925,
+      "return_q025": -0.0642767641782801,
+      "return_q975": 0.06009714937254595,
+      "price_q025": 59389.30290394037,
+      "price_q975": 67254.77622612224,
+      "VaR_95": 0.04891937017816011,
+      "CVaR_95": 0.07518149941416542,
+      "price_at_VaR_95": 60308.40728797981,
+      "VaR_99": 0.08876588315840506,
+      "CVaR_99": 0.1257181038340576,
+      "price_at_VaR_99": 57952.57509983106,
+      "p_high_state": 0.3078403206525974
+    },
+    {
+      "model": "SV",
+      "forecast_date": "2026-06-08T00:00:00+00:00",
+      "last_close": 63332.01,
+      "mu_return": -0.001263114778371134,
+      "sigma_return": 0.0324791013478047,
+      "return_mean_sim": -0.0008757511404615274,
+      "return_median_sim": -0.00015990056371362573,
+      "loss_mean_sim": 0.0008757511404615274,
+      "predicted_close_mu": 63252.06490277103,
+      "predicted_close_median_sim": 63321.883985499175,
+      "return_q025": -0.06253173633320358,
+      "return_q975": 0.0630179963205619,
+      "price_q025": 59493.02936766952,
+      "price_q975": 67451.50430043659,
+      "VaR_95": 0.04408942941874686,
+      "CVaR_95": 0.09359776779367643,
+      "price_at_VaR_95": 60600.397903525496,
+      "VaR_99": 0.09782068830955237,
+      "CVaR_99": 0.21668225483377496,
+      "price_at_VaR_99": 57430.19442106452,
+      "p_high_state": NaN
+    }
+  ],
+  "methodology_checklist": [
+    {
+      "bab": "Bab 3.6.1",
+      "step": "Pengumpulan data BTCUSDT daily melalui API Binance dengan pagination",
+      "notebook_cell": "Cell 05",
+      "status": "Sesuai",
+      "evidence": "fetch_binance_klines mengambil OHLCV harian realtime dan menyimpan snapshot raw/modeling."
+    },
+    {
+      "bab": "Bab 3.6.2",
+      "step": "Pre-processing: missing value, duplikasi timestamp, urutan tanggal, validitas close/volume",
+      "notebook_cell": "Cell 06",
+      "status": "Sesuai",
+      "evidence": "validation memeriksa missing calendar days, duplicate_dates, index_monotonic, bad close, bad volume."
+    },
+    {
+      "bab": "Bab 2.3.1 / 3.4",
+      "step": "Membentuk return log harian dari close price dan loss = -return",
+      "notebook_cell": "Cell 05",
+      "status": "Sesuai",
+      "evidence": "ret_log = log(close/close.shift(1)); loss, ret_sq, abs_ret dibentuk untuk risiko dan diagnostik volatilitas."
+    },
+    {
+      "bab": "Bab 2.3.1 / 3.5",
+      "step": "Analisis deskriptif, tail behavior, dan indikasi heavy-tail",
+      "notebook_cell": "Cell 07, 11",
+      "status": "Sesuai",
+      "evidence": "Plot harga/return, statistik mean-std-min-max, skewness, kurtosis, Jarque-Bera, dan quantile ekstrem."
+    },
+    {
+      "bab": "Bab 2.3.1",
+      "step": "Uji stasioneritas return dengan ADF sebelum pemodelan deret waktu",
+      "notebook_cell": "Cell 09",
+      "status": "Sesuai",
+      "evidence": "ADF dijalankan pada data train; KPSS ditambahkan sebagai pemeriksaan pendukung."
+    },
+    {
+      "bab": "Bab 2.3.2 / 2.3.3",
+      "step": "Uji autokorelasi dan volatility clustering dengan Ljung-Box serta ARCH-LM",
+      "notebook_cell": "Cell 10, 13",
+      "status": "Sesuai",
+      "evidence": "Ljung-Box pada return dan squared return, ARCH-LM pada return demeaned, serta Ljung-Box residual ARMA."
+    },
+    {
+      "bab": "Bab 2.3.2 / 3.6.4",
+      "step": "Mean filtering memakai ARMA sebelum pemodelan volatilitas",
+      "notebook_cell": "Cell 12, 13",
+      "status": "Sesuai",
+      "evidence": "Order ARMA dipilih pada data training berdasarkan AIC; residual ARMA digunakan sebagai input model volatilitas."
+    },
+    {
+      "bab": "Bab 2.3.4 / 2.3.5 / 3.6.4",
+      "step": "MS-GARCH dua rezim dengan peluang transisi, probabilitas filtered/smoothed, dan volatilitas bersyarat",
+      "notebook_cell": "Cell 14, 15, 17",
+      "status": "Sesuai setelah perbaikan",
+      "evidence": "Parameter GARCH per state dan transition matrix diestimasi bersama; filtered dan smoothed probability dibuat eksplisit."
+    },
+    {
+      "bab": "Bab 2.3.6 / 3.6.4",
+      "step": "Stochastic Volatility Student-t dengan latent volatility path dan ketidakpastian posterior",
+      "notebook_cell": "Cell 18, 19, 20, 21",
+      "status": "Sesuai setelah perbaikan",
+      "evidence": "SV memakai Student-t observation model; posterior parameter dan latent sigma path mean/q025/q975 dibuat eksplisit."
+    },
+    {
+      "bab": "Bab 2.3.7 / 3.6.5",
+      "step": "VaR dan CVaR dari distribusi prediktif return satu hari ke depan",
+      "notebook_cell": "Cell 17, 21, 23, 24",
+      "status": "Sesuai",
+      "evidence": "Rolling OOS dan next-day forecast memakai simulasi distribusi return untuk VaR/CVaR 95% dan 99%."
+    },
+    {
+      "bab": "Bab 2.3.8 / 3.6.5",
+      "step": "Backtesting out-of-sample: breach count/rate dan Kupiec coverage test",
+      "notebook_cell": "Cell 27, 28",
+      "status": "Sesuai",
+      "evidence": "Kupiec unconditional coverage dihitung; Christoffersen independence ditambahkan untuk mengecek clustering breach."
+    },
+    {
+      "bab": "Bab 3.6.6",
+      "step": "Evaluasi perbandingan MS-GARCH vs SV berdasarkan backtesting, CVaR, dan stabilitas hasil",
+      "notebook_cell": "Cell 29, 30, 31, 35, 36",
+      "status": "Sesuai",
+      "evidence": "comparison_rank dan best_by_confidence merangkum model terbaik per confidence level."
+    },
+    {
+      "bab": "Bab 3.6.7",
+      "step": "Dashboard reporting and result presentation",
+      "notebook_cell": "Output reporting",
+      "status": "Documented",
+      "evidence": "CSV dan JSON hasil pemodelan diekspor untuk pelaporan, validasi, dan visualisasi hasil penelitian."
+    }
+  ]
+}
