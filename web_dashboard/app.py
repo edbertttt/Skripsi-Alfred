@@ -189,12 +189,6 @@ def render_models_diagnostics(filters: dict[str, Any]) -> None:
                 f"Best Model by Confidence Level ({filters['confidence_label']})",
                 "Best model summary is not available.",
             )
-        render_table(
-            DATA["methodology_checklist"],
-            "Methodology Checklist",
-            "Methodology checklist output is not available.",
-            height=280,
-        )
 
     with ms_tab:
         st.markdown(

@@ -49,7 +49,6 @@ CSV_FILES = {
     "price_demo": "price_forecast_demo.csv",
     "model_rank": "model_comparison_rank.csv",
     "best_model": "best_model_by_confidence.csv",
-    "methodology_checklist": "methodology_checklist_bab_2_3.csv",
     "ms_params": "ms_garch_state_parameters.csv",
     "ms_transition": "ms_garch_transition_matrix.csv",
     "ms_filtered_prob": "ms_garch_filtered_probabilities_train.csv",

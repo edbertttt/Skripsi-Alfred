@@ -74,7 +74,6 @@ outputs/ljung_box_squared_return.csv
 outputs/arch_lm_test.csv
 outputs/distribution_tail_summary.csv
 outputs/model_summary.json
-outputs/methodology_checklist_bab_2_3.csv
 ```
 
 Missing files are reported in the UI without substituting unavailable model results.
@@ -82,7 +81,7 @@ Missing files are reported in the UI without substituting unavailable model resu
 ## Pages
 
 - Dashboard: daily BTC risk overview, KPI cards, price/return/volatility charts, VaR breach view, and daily risk table.
-- Models & Diagnostics: methodology overview, MS-GARCH outputs, SV outputs, diagnostics, model comparison, and methodology checklist.
+- Models & Diagnostics: methodology overview, model comparison, MS-GARCH outputs, SV outputs, and diagnostics.
 - Backtesting: VaR breach metrics, Kupiec and Christoffersen test outputs, breach events, and MS-GARCH vs SV comparison.
 - Forecast: next-day VaR/CVaR cards and one-step-ahead price forecast chart.
 - About: thesis metadata, methodology scope, sample coverage, and empirical workflow.
