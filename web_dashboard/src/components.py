@@ -834,6 +834,66 @@ def set_global_styles() -> None:
             border-radius: 8px;
             overflow: hidden;
         }
+        .bitrisk-table-wrap {
+            background: var(--dashboard-card-bg);
+            border: 1px solid var(--dashboard-border-muted);
+            border-radius: 8px;
+            box-shadow: 0 14px 34px var(--dashboard-shadow);
+            margin: 0.25rem 0 1.15rem;
+            overflow: hidden;
+        }
+        .bitrisk-table-scroll {
+            max-height: var(--bitrisk-table-height, 420px);
+            overflow: auto;
+            width: 100%;
+        }
+        .bitrisk-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            min-width: 100%;
+            width: max-content;
+        }
+        .bitrisk-table th,
+        .bitrisk-table td {
+            border-bottom: 1px solid var(--dashboard-border-muted);
+            border-right: 1px solid var(--dashboard-border-muted);
+            padding: 0.62rem 0.72rem;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        .bitrisk-table th {
+            background: color-mix(in srgb, var(--dashboard-control-selected) 58%, var(--dashboard-card-bg));
+            color: var(--dashboard-muted);
+            font-size: 0.82rem;
+            font-weight: 750;
+            position: sticky;
+            text-align: left;
+            top: 0;
+            z-index: 1;
+        }
+        .bitrisk-table td {
+            background: var(--dashboard-card-bg);
+            color: var(--dashboard-text);
+            font-size: 0.86rem;
+            font-weight: 560;
+        }
+        .bitrisk-table tr:nth-child(even) td {
+            background: color-mix(in srgb, var(--dashboard-control-bg) 82%, var(--dashboard-card-bg));
+        }
+        .bitrisk-table tr:hover td {
+            background: var(--dashboard-control-hover);
+        }
+        .bitrisk-table th:last-child,
+        .bitrisk-table td:last-child {
+            border-right: 0;
+        }
+        .bitrisk-table tr:last-child td {
+            border-bottom: 0;
+        }
+        .bitrisk-table .numeric-cell {
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+        }
         .small-note {
             color: var(--dashboard-muted);
             font-size: 0.92rem;
@@ -3310,10 +3370,48 @@ def render_table(
         st.warning(missing_label)
         return
 
-    dataframe_kwargs: dict[str, Any] = {"width": "stretch", "hide_index": True}
-    if height is not None:
-        dataframe_kwargs["height"] = height
-    st.dataframe(tidy_dataframe(df), **dataframe_kwargs)
+    display = tidy_dataframe(df)
+    max_height = f"{height}px" if height is not None else "420px"
+    st.markdown(_html_table(display, max_height), unsafe_allow_html=True)
+
+
+def _html_table(df: pd.DataFrame, max_height: str) -> str:
+    headers = "".join(f"<th>{escape(str(column))}</th>" for column in df.columns)
+    numeric_columns = {
+        column for column in df.columns if pd.api.types.is_numeric_dtype(df[column])
+    }
+    rows: list[str] = []
+
+    for _, row in df.iterrows():
+        cells: list[str] = []
+        for column in df.columns:
+            css_class = "numeric-cell" if column in numeric_columns else ""
+            cells.append(f"<td class='{css_class}'>{escape(_display_cell(row[column]))}</td>")
+        rows.append("<tr>" + "".join(cells) + "</tr>")
+
+    return f"""
+    <div class="bitrisk-table-wrap" style="--bitrisk-table-height: {escape(max_height)};">
+        <div class="bitrisk-table-scroll">
+            <table class="bitrisk-table">
+                <thead><tr>{headers}</tr></thead>
+                <tbody>{"".join(rows)}</tbody>
+            </table>
+        </div>
+    </div>
+    """
+
+
+def _display_cell(value: Any) -> str:
+    if value is None:
+        return "N/A"
+    try:
+        if bool(pd.isna(value)):
+            return "N/A"
+    except (TypeError, ValueError):
+        pass
+    if isinstance(value, bool):
+        return "Yes" if value else "No"
+    return str(value)
 
 
 def render_plotly(fig: Any) -> None:
