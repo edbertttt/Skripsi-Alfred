@@ -48,14 +48,17 @@ def btc_close_chart(df: pd.DataFrame, timeframe: str = "30D") -> go.Figure:
     y_title = "Close Price (USDT, log scale)" if use_log_scale else "Close Price (USDT)"
 
     fig = go.Figure()
+    close = pd.to_numeric(df["close"], errors="coerce")
+    y_range = None if use_log_scale else _padded_range(close)
+
     fig.add_trace(
         go.Scatter(
             x=df["open_time"],
-            y=df["close"],
+            y=close,
             mode="lines",
             name="BTC Close",
             line={"color": COLOR_PRICE, "width": 2},
-            fill="tozeroy",
+            fill="tozeroy" if y_range is None else "tonexty",
             fillcolor="rgba(47, 95, 218, 0.10)",
             hovertemplate="%{x|%Y-%m-%d}<br>Close: %{y:,.2f} USDT<extra></extra>",
         )
@@ -70,9 +73,23 @@ def btc_close_chart(df: pd.DataFrame, timeframe: str = "30D") -> go.Figure:
             "borderwidth": 1,
         },
     )
-    fig.update_yaxes(type="log" if use_log_scale else "linear", tickprefix="$")
+    fig.update_yaxes(type="log" if use_log_scale else "linear", tickprefix="$", range=y_range)
     fig.update_layout(height=500, margin={"l": 24, "r": 24, "t": 58, "b": 72}, showlegend=False)
     return fig
+
+
+def _padded_range(series: pd.Series, padding_ratio: float = 0.08) -> list[float] | None:
+    values = pd.to_numeric(series, errors="coerce").replace([np.inf, -np.inf], np.nan).dropna()
+    if values.empty:
+        return None
+
+    lower = float(values.min())
+    upper = float(values.max())
+    if lower == upper:
+        padding = max(abs(lower) * 0.01, 1.0)
+    else:
+        padding = (upper - lower) * padding_ratio
+    return [max(0.0, lower - padding), upper + padding]
 
 
 def log_return_chart(df: pd.DataFrame) -> go.Figure:
