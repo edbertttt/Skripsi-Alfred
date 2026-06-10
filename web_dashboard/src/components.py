@@ -82,6 +82,23 @@ def set_global_styles() -> None:
         [data-testid="stSidebar"] {
             background: var(--dashboard-surface);
             border-right: 1px solid var(--dashboard-border-muted);
+            flex: 0 0 286px !important;
+            max-width: 286px !important;
+            min-width: 286px !important;
+            width: 286px !important;
+        }
+        [data-testid="stSidebar"] > div,
+        [data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
+            max-width: 286px !important;
+            min-width: 286px !important;
+            width: 286px !important;
+        }
+        [data-testid="stSidebarResizer"],
+        [data-testid="stSidebarResizeHandle"],
+        [data-testid="stSidebar"] + div[role="separator"],
+        div[role="separator"][aria-orientation="vertical"] {
+            display: none !important;
+            pointer-events: none !important;
         }
         [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
             display: flex;
@@ -509,6 +526,14 @@ def set_global_styles() -> None:
         [data-testid="stDateInput"] input,
         [data-testid="stTextInput"] input,
         [data-testid="stNumberInput"] input {
+            background: transparent !important;
+            color: var(--dashboard-control-text) !important;
+            -webkit-text-fill-color: var(--dashboard-control-text) !important;
+        }
+        select,
+        select option,
+        select optgroup {
+            background: var(--dashboard-control-bg) !important;
             color: var(--dashboard-control-text) !important;
             -webkit-text-fill-color: var(--dashboard-control-text) !important;
         }
@@ -517,6 +542,69 @@ def set_global_styles() -> None:
         [data-testid="stTextInput"] [data-baseweb="input"]:hover,
         [data-testid="stNumberInput"] [data-baseweb="input"]:hover {
             border-color: color-mix(in srgb, var(--dashboard-primary) 42%, var(--dashboard-border-muted)) !important;
+        }
+        body [data-baseweb="popover"],
+        body [data-baseweb="popover"] > div,
+        body [data-baseweb="popover"] [role="dialog"],
+        body [data-baseweb="popover"] [role="listbox"],
+        body [data-baseweb="popover"] ul,
+        body [data-baseweb="popover"] li,
+        body [data-baseweb="menu"],
+        body [data-baseweb="menu"] ul,
+        body [data-baseweb="menu"] li,
+        body [data-baseweb="calendar"],
+        body [data-baseweb="calendar"] > div {
+            background: var(--dashboard-card-bg) !important;
+            border-color: var(--dashboard-border-muted) !important;
+            color: var(--dashboard-text) !important;
+        }
+        body [data-baseweb="popover"] *,
+        body [data-baseweb="menu"] *,
+        body [data-baseweb="calendar"] *,
+        body [role="listbox"] *,
+        body [role="option"] * {
+            color: var(--dashboard-text) !important;
+            -webkit-text-fill-color: var(--dashboard-text) !important;
+        }
+        body [role="option"],
+        body [data-baseweb="menu"] [role="option"],
+        body [data-baseweb="popover"] [role="option"],
+        body [data-baseweb="select-dropdown"] [role="option"] {
+            background: var(--dashboard-card-bg) !important;
+            color: var(--dashboard-text) !important;
+            -webkit-text-fill-color: var(--dashboard-text) !important;
+        }
+        body [role="option"]:hover,
+        body [role="option"][aria-selected="true"],
+        body [role="option"][aria-current="true"],
+        body [data-highlighted="true"],
+        body [data-baseweb="menu"] [role="option"]:hover,
+        body [data-baseweb="popover"] [role="option"]:hover {
+            background: var(--dashboard-control-hover) !important;
+            color: var(--dashboard-control-text) !important;
+            -webkit-text-fill-color: var(--dashboard-control-text) !important;
+        }
+        body [data-baseweb="calendar"] button,
+        body [data-baseweb="calendar"] [role="button"],
+        body [data-baseweb="calendar"] [role="gridcell"],
+        body [data-baseweb="calendar"] [role="columnheader"] {
+            background: transparent !important;
+            color: var(--dashboard-text) !important;
+            -webkit-text-fill-color: var(--dashboard-text) !important;
+        }
+        body [data-baseweb="calendar"] button:hover,
+        body [data-baseweb="calendar"] [role="gridcell"]:hover,
+        body [data-baseweb="calendar"] [aria-selected="true"],
+        body [data-baseweb="calendar"] [aria-current="date"] {
+            background: var(--dashboard-control-selected) !important;
+            color: var(--dashboard-control-text) !important;
+            -webkit-text-fill-color: var(--dashboard-control-text) !important;
+        }
+        body [data-baseweb="calendar"] [aria-disabled="true"],
+        body [data-baseweb="calendar"] [disabled] {
+            color: var(--dashboard-muted) !important;
+            opacity: 0.48 !important;
+            -webkit-text-fill-color: var(--dashboard-muted) !important;
         }
         [data-baseweb="popover"],
         [data-baseweb="popover"] > div,
