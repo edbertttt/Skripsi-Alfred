@@ -2254,8 +2254,10 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
         "success": "#4fd1a5" if dark_mode else "#168a69",
         "danger": "#fb7185" if dark_mode else "#c24150",
         "warning": "#f2b44b" if dark_mode else "#b86b0b",
-        "ms": "#38bdf8" if dark_mode else "#0f7f8f",
-        "sv": "#a78bfa" if dark_mode else "#6d5bd0",
+        "actual": "#60a5fa" if dark_mode else "#2563eb",
+        "live": "#f59e0b" if dark_mode else "#c56f00",
+        "ms": "#22d3ee" if dark_mode else "#0f7f8f",
+        "sv": "#c084fc" if dark_mode else "#6d5bd0",
     }
     payload = {
         "forecasts": _forecast_records(forecast_df, model),
@@ -2271,8 +2273,8 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
         <section class="panel">
             <div class="chart-head">
                 <div>
-                    <div class="chart-title">One-Step-Ahead Price Forecast with Live BTC Overlay</div>
-                    <div class="chart-subtitle">Use the range buttons to inspect the latest BTC price movement.</div>
+                    <div class="chart-title">Current BTC Price vs Tomorrow Forecast</div>
+                    <div class="chart-subtitle">Markers separate the current live BTC price from each model's next-day forecast.</div>
                 </div>
                 <div id="forecast-range-buttons" class="range-buttons"></div>
             </div>
@@ -2286,9 +2288,10 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
                         <tr>
                             <th>Model</th>
                             <th>Forecast Date</th>
-                            <th>Live Price</th>
+                            <th>Current Price</th>
+                            <th>Forecast Price</th>
+                            <th>Model Return</th>
                             <th>Live Return</th>
-                            <th>Live Loss</th>
                             <th>VaR 95</th>
                             <th>CVaR 95</th>
                             <th>VaR 99</th>
@@ -2350,17 +2353,33 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
             justify-content: space-between;
             margin-bottom: 0.8rem;
         }
+        .forecast-pill {
+            background: color-mix(in srgb, var(--primary) 12%, var(--card));
+            border: 1px solid color-mix(in srgb, var(--primary) 18%, var(--border));
+            border-radius: 999px;
+            color: var(--primary);
+            font-size: 0.72rem;
+            font-weight: 850;
+            padding: 0.22rem 0.55rem;
+            white-space: nowrap;
+        }
         .model {
             color: var(--text);
             font-size: 1.12rem;
             font-weight: 850;
         }
-        .live-price {
+        .forecast-price {
             color: var(--text);
             font-size: clamp(2rem, 4vw, 3.3rem);
             font-weight: 860;
             line-height: 1;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.28rem;
+        }
+        .forecast-caption {
+            color: var(--muted);
+            font-size: 0.8rem;
+            font-weight: 720;
+            margin-bottom: 0.85rem;
         }
         .mini-grid {
             display: grid;
@@ -2531,8 +2550,47 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
             return Number.isNaN(parsed.getTime()) ? "N/A" : parsed.toISOString().slice(0, 10);
         }
 
+        function localDateString(offsetDays = 0) {
+            const date = new Date();
+            date.setDate(date.getDate() + offsetDays);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+
+        function tomorrowDateString() {
+            return localDateString(1);
+        }
+
+        function forecastTimestamp(row) {
+            const current = new Date(currentTimestamp());
+            current.setDate(current.getDate() + 1);
+            return current.toISOString();
+        }
+
+        function currentTimestamp() {
+            if (live.updatedAt) {
+                const parsed = new Date(live.updatedAt);
+                if (!Number.isNaN(parsed.getTime())) return parsed.toISOString();
+            }
+            return new Date().toISOString();
+        }
+
+        function forecastDateFor(row) {
+            return tomorrowDateString();
+        }
+
         function modelColor(modelKey) {
             return modelKey === "SV" ? theme.sv : theme.ms;
+        }
+
+        function modelForecastSymbol(modelKey) {
+            return modelKey === "SV" ? "diamond" : "square";
+        }
+
+        function modelLineDash(modelKey) {
+            return modelKey === "SV" ? "dash" : "dot";
         }
 
         function rangeOptions() {
@@ -2550,7 +2608,7 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
             return rangeOptions().find(item => item.label === selectedRange) || rangeOptions()[3];
         }
 
-        function latestReferenceDate() {
+        function latestObservedDate() {
             const dates = [];
             if (live.updatedAt) dates.push(new Date(live.updatedAt));
             if (chartCandles.length > 0) dates.push(new Date(chartCandles[chartCandles.length - 1].t));
@@ -2561,10 +2619,25 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
             return valid.length ? new Date(Math.max(...valid.map(date => date.getTime()))) : new Date();
         }
 
+        function xRangeEndDate() {
+            const dates = [latestObservedDate()];
+            for (const row of payload.forecasts) {
+                dates.push(new Date(forecastTimestamp(row)));
+            }
+            const valid = dates.filter(date => !Number.isNaN(date.getTime()));
+            const end = valid.length ? new Date(Math.max(...valid.map(date => date.getTime()))) : new Date();
+            const config = currentRange();
+            if (!config.days) return end;
+            const oneHour = 60 * 60 * 1000;
+            const oneDay = 24 * oneHour;
+            const pad = Math.min(Math.max(config.days * oneDay * 0.04, 2 * oneHour), 18 * oneHour);
+            return new Date(end.getTime() + pad);
+        }
+
         function rangeStartDate() {
             const config = currentRange();
             if (!config.days) return null;
-            const end = latestReferenceDate();
+            const end = latestObservedDate();
             return new Date(end.getTime() - config.days * 24 * 60 * 60 * 1000);
         }
 
@@ -2585,14 +2658,14 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
             return filteredDemoRows().map(row => ({ t: row.t, actual: row.actual }));
         }
 
-        function forecastMarkersForRange() {
+        function forecastRowsForRange() {
             if (selectedRange === "All") return payload.forecasts;
             const start = rangeStartDate();
             if (!start) return payload.forecasts;
-            const end = latestReferenceDate();
+            const end = xRangeEndDate();
             end.setHours(23, 59, 59, 999);
             return payload.forecasts.filter(row => {
-                const date = new Date(row.forecastDate);
+                const date = new Date(forecastTimestamp(row));
                 return !Number.isNaN(date.getTime()) && date >= start && date <= end;
             });
         }
@@ -2624,20 +2697,50 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
             return ret === null ? null : -ret;
         }
 
+        function modelReturn(row) {
+            const preferred = numberOrNull(row.returnMedian);
+            if (preferred !== null) return preferred;
+            const mean = numberOrNull(row.returnMean);
+            if (mean !== null) return mean;
+            const mu = numberOrNull(row.muReturn);
+            if (mu !== null) return mu;
+            if (row.predictedClose !== null && row.lastClose !== null && row.predictedClose > 0 && row.lastClose > 0) {
+                return Math.log(row.predictedClose / row.lastClose);
+            }
+            return null;
+        }
+
+        function basePrice(row) {
+            const livePrice = numberOrNull(live.price);
+            if (livePrice !== null) return livePrice;
+            return numberOrNull(row.lastClose);
+        }
+
+        function realtimeForecastPrice(row) {
+            const base = basePrice(row);
+            const ret = modelReturn(row);
+            if (base !== null && ret !== null) return base * Math.exp(ret);
+            return numberOrNull(row.predictedClose);
+        }
+
         function renderCards() {
             const container = document.getElementById("forecast-cards");
             container.innerHTML = payload.forecasts.map(row => {
+                const forecastPrice = realtimeForecastPrice(row);
+                const forecastDate = forecastDateFor(row);
                 return `
                     <article class="card">
                         <div class="card-head">
                             <div class="model">${row.label}</div>
+                            <div class="forecast-pill">Forecast ${dateText(forecastDate)}</div>
                         </div>
-                        <div class="live-price">${money(live.price)}</div>
+                        <div class="forecast-price">${money(forecastPrice)}</div>
+                        <div class="forecast-caption">Next-day forecast price based on the current live BTC price.</div>
                         <div class="mini-grid">
-                            <div class="mini"><span>Forecast Date</span><strong>${dateText(row.forecastDate)}</strong></div>
-                            <div class="mini"><span>Last Close</span><strong>${money(row.lastClose)}</strong></div>
+                            <div class="mini"><span>Current Price</span><strong>${money(basePrice(row))}</strong></div>
+                            <div class="mini"><span>Model Return</span><strong>${pct(modelReturn(row))}</strong></div>
+                            <div class="mini"><span>Model Base Close</span><strong>${money(row.lastClose)}</strong></div>
                             <div class="mini"><span>Live Return</span><strong>${pct(liveReturn(row))}</strong></div>
-                            <div class="mini"><span>Live Loss</span><strong>${pct(liveLoss(row))}</strong></div>
                             <div class="mini"><span>VaR 95</span><strong>${pct(row.VaR95)}</strong></div>
                             <div class="mini"><span>CVaR 95</span><strong>${pct(row.CVaR95)}</strong></div>
                             <div class="mini"><span>VaR 99</span><strong>${pct(row.VaR99)}</strong></div>
@@ -2651,13 +2754,15 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
         function renderTable() {
             const body = document.getElementById("forecast-table-body");
             body.innerHTML = payload.forecasts.map(row => {
+                const forecastPrice = realtimeForecastPrice(row);
                 return `
                     <tr>
                         <td>${row.label}</td>
-                        <td>${dateText(row.forecastDate)}</td>
-                        <td>${money(live.price)}</td>
+                        <td>${dateText(forecastDateFor(row))}</td>
+                        <td>${money(basePrice(row))}</td>
+                        <td>${money(forecastPrice)}</td>
+                        <td>${pct(modelReturn(row))}</td>
                         <td>${pct(liveReturn(row))}</td>
-                        <td>${pct(liveLoss(row))}</td>
                         <td>${pct(row.VaR95)}</td>
                         <td>${pct(row.CVaR95)}</td>
                         <td>${pct(row.VaR99)}</td>
@@ -2665,6 +2770,61 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
                     </tr>
                 `;
             }).join("");
+        }
+
+        function yAxisRangeFromTraces(traces) {
+            const values = [];
+            for (const trace of traces) {
+                if (!Array.isArray(trace.y)) continue;
+                for (const value of trace.y) {
+                    const parsed = numberOrNull(value);
+                    if (parsed !== null) values.push(parsed);
+                }
+            }
+            if (!values.length) return undefined;
+            const minValue = Math.min(...values);
+            const maxValue = Math.max(...values);
+            const padding = minValue === maxValue ? Math.max(Math.abs(minValue) * 0.01, 1) : (maxValue - minValue) * 0.08;
+            return [Math.max(0, minValue - padding), maxValue + padding];
+        }
+
+        function chartGuides(nowX) {
+            const forecastX = payload.forecasts.length ? forecastTimestamp(payload.forecasts[0]) : null;
+            const shapes = [];
+            const annotations = [];
+
+            function addGuide(x, color, label, y) {
+                if (!x) return;
+                shapes.push({
+                    type: "line",
+                    xref: "x",
+                    yref: "paper",
+                    x0: x,
+                    x1: x,
+                    y0: 0,
+                    y1: 1,
+                    line: { color, width: 1.5, dash: "dot" },
+                });
+                annotations.push({
+                    x,
+                    y,
+                    xref: "x",
+                    yref: "paper",
+                    text: label,
+                    showarrow: false,
+                    xanchor: "center",
+                    yanchor: "bottom",
+                    bgcolor: theme.card,
+                    bordercolor: color,
+                    borderpad: 4,
+                    borderwidth: 1,
+                    font: { color, size: 12 },
+                });
+            }
+
+            addGuide(nowX, theme.live, "Current live price", 1.05);
+            addGuide(forecastX, theme.primary, "Tomorrow forecast", 1.12);
+            return { shapes, annotations };
         }
 
         function renderChart() {
@@ -2679,7 +2839,7 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
                 y: actualRows.map(row => row.actual),
                 mode: "lines",
                 name: "Actual Close",
-                line: { color: theme.primary, width: 2 },
+                line: { color: theme.actual, width: 2.4 },
                 hovertemplate: "%{x|%Y-%m-%d}<br>Actual: %{y:,.2f} USDT<extra></extra>",
             }];
 
@@ -2692,55 +2852,79 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
                         y: predictionRows.map(row => row[field]),
                         mode: "lines",
                         name: model.label + " Historical Prediction",
-                        line: { color: modelColor(model.key), width: 2 },
+                        line: { color: modelColor(model.key), width: 2.1, dash: modelLineDash(model.key) },
                         hovertemplate: "%{x|%Y-%m-%d}<br>Predicted: %{y:,.2f} USDT<extra></extra>",
                     });
                 }
             }
 
-            for (const row of forecastMarkersForRange()) {
-                if (row.predictedClose === null || !row.forecastDate) continue;
+            const nowX = currentTimestamp();
+            for (const row of forecastRowsForRange()) {
+                const forecastPrice = realtimeForecastPrice(row);
+                const base = basePrice(row);
+                const forecastX = forecastTimestamp(row);
+                if (forecastPrice === null || !forecastX) continue;
+                if (base !== null) {
+                    traces.push({
+                        x: [nowX, forecastX],
+                        y: [base, forecastPrice],
+                        mode: "lines",
+                        name: row.label + " Current-to-Forecast Path",
+                        line: { color: modelColor(row.model), width: 2.2, dash: "dash" },
+                        hovertemplate: "%{x|%Y-%m-%d %H:%M}<br>Path: %{y:,.2f} USDT<extra></extra>",
+                    });
+                }
                 traces.push({
-                    x: [row.forecastDate],
-                    y: [row.predictedClose],
+                    x: [forecastX],
+                    y: [forecastPrice],
                     mode: "markers",
-                    name: row.label + " Next Forecast",
-                    marker: { color: modelColor(row.model), size: 11, symbol: "circle" },
-                    hovertemplate: "%{x|%Y-%m-%d}<br>Forecast: %{y:,.2f} USDT<extra></extra>",
+                    name: row.label + " Tomorrow Forecast",
+                    marker: {
+                        color: modelColor(row.model),
+                        line: { color: theme.text, width: 1 },
+                        size: 14,
+                        symbol: modelForecastSymbol(row.model),
+                    },
+                    hovertemplate: "%{x|%Y-%m-%d}<br>Tomorrow Forecast: %{y:,.2f} USDT<extra></extra>",
                 });
             }
 
             if (live.price !== null) {
                 traces.push({
-                    x: [new Date().toISOString()],
+                    x: [nowX],
                     y: [live.price],
                     mode: "markers",
-                    name: "Live BTC Price",
-                    marker: { color: theme.warning, size: 12, symbol: "diamond" },
-                    hovertemplate: "%{x|%Y-%m-%d %H:%M}<br>Live: %{y:,.2f} USDT<extra></extra>",
+                    name: "Current Live BTC Price",
+                    marker: { color: theme.live, line: { color: theme.text, width: 1 }, size: 15, symbol: "diamond" },
+                    hovertemplate: "%{x|%Y-%m-%d %H:%M}<br>Current: %{y:,.2f} USDT<extra></extra>",
                 });
             }
 
             const configRange = currentRange();
             const xAxisRange = selectedRange === "All" || !configRange.days
                 ? undefined
-                : [rangeStartDate().toISOString(), latestReferenceDate().toISOString()];
+                : [rangeStartDate().toISOString(), xRangeEndDate().toISOString()];
+            const yAxisRange = selectedRange === "All" ? undefined : yAxisRangeFromTraces(traces);
+            const guides = chartGuides(nowX);
 
             Plotly.react("forecast-chart", traces, {
-                title: { text: "BTCUSDT Close Price (" + selectedRange + ")", font: { color: theme.text, size: 16 } },
+                title: { text: "Current BTC Price and Tomorrow Forecast (" + selectedRange + ")", font: { color: theme.text, size: 16 } },
                 height: 500,
-                margin: { l: 64, r: 24, t: 56, b: 90 },
+                margin: { l: 64, r: 24, t: 82, b: 90 },
                 paper_bgcolor: "rgba(0,0,0,0)",
                 plot_bgcolor: "rgba(0,0,0,0)",
                 font: { color: theme.text, family: "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" },
                 hovermode: "x unified",
                 legend: { orientation: "h", x: 0, y: -0.18, font: { color: theme.text, size: 12 } },
+                shapes: guides.shapes,
+                annotations: guides.annotations,
                 xaxis: { type: "date", range: xAxisRange, gridcolor: theme.grid, tickfont: { color: theme.text } },
                 yaxis: {
                     title: { text: "Close Price (USDT)", font: { color: theme.text } },
                     tickprefix: "$",
                     gridcolor: theme.grid,
                     tickfont: { color: theme.text },
+                    range: yAxisRange,
                 },
             }, config);
         }
@@ -3502,6 +3686,9 @@ def _forecast_records(df: pd.DataFrame, model: str) -> list[dict[str, Any]]:
                 "forecastDate": _date_iso(row.get("forecast_date")),
                 "lastClose": _to_float(row.get("last_close")),
                 "predictedClose": predicted_close,
+                "muReturn": _to_float(row.get("mu_return")),
+                "returnMean": _to_float(row.get("return_mean_sim")),
+                "returnMedian": _to_float(row.get("return_median_sim")),
                 "VaR95": _to_float(row.get("VaR_95")),
                 "CVaR95": _to_float(row.get("CVaR_95")),
                 "VaR99": _to_float(row.get("VaR_99")),
