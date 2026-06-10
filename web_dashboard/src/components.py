@@ -83,19 +83,52 @@ def set_global_styles() -> None:
             background: var(--dashboard-surface);
             border-right: 1px solid var(--dashboard-border-muted);
             flex: 0 0 286px !important;
+            height: 100vh !important;
             max-width: 286px !important;
             min-width: 286px !important;
+            overflow: hidden !important;
+            position: sticky !important;
+            resize: none !important;
+            top: 0 !important;
             width: 286px !important;
         }
+        [data-testid="stSidebar"]::after {
+            content: "";
+            cursor: default;
+            height: 100vh;
+            left: 279px;
+            pointer-events: auto;
+            position: fixed;
+            top: 0;
+            width: 14px;
+            z-index: 999999;
+        }
         [data-testid="stSidebar"] > div,
+        [data-testid="stSidebar"] > div:first-child,
+        [data-testid="stSidebar"] [data-testid="stSidebarContent"],
         [data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
             max-width: 286px !important;
             min-width: 286px !important;
+            overflow: hidden !important;
+            resize: none !important;
             width: 286px !important;
+        }
+        [data-testid="stSidebar"] *,
+        [data-testid="stSidebar"] *::before,
+        [data-testid="stSidebar"] *::after {
+            scrollbar-width: none !important;
+        }
+        [data-testid="stSidebar"] *::-webkit-scrollbar {
+            display: none !important;
+            height: 0 !important;
+            width: 0 !important;
         }
         [data-testid="stSidebarResizer"],
         [data-testid="stSidebarResizeHandle"],
+        [data-testid="stSidebarCollapseButton"],
+        [data-testid="collapsedControl"],
         [data-testid="stSidebar"] + div[role="separator"],
+        [data-testid="stSidebar"] ~ div[role="separator"],
         div[role="separator"][aria-orientation="vertical"] {
             display: none !important;
             pointer-events: none !important;
@@ -545,16 +578,26 @@ def set_global_styles() -> None:
         }
         body [data-baseweb="popover"],
         body [data-baseweb="popover"] > div,
+        body [data-baseweb="popover"] div,
         body [data-baseweb="popover"] [role="dialog"],
         body [data-baseweb="popover"] [role="listbox"],
         body [data-baseweb="popover"] ul,
         body [data-baseweb="popover"] li,
         body [data-baseweb="menu"],
+        body [data-baseweb="menu"] div,
         body [data-baseweb="menu"] ul,
         body [data-baseweb="menu"] li,
         body [data-baseweb="calendar"],
-        body [data-baseweb="calendar"] > div {
+        body [data-baseweb="calendar"] > div,
+        body [data-baseweb="calendar"] div,
+        body [data-baseweb="calendar"] table,
+        body [data-baseweb="calendar"] thead,
+        body [data-baseweb="calendar"] tbody,
+        body [data-baseweb="calendar"] tr,
+        body [data-baseweb="calendar"] th,
+        body [data-baseweb="calendar"] td {
             background: var(--dashboard-card-bg) !important;
+            background-color: var(--dashboard-card-bg) !important;
             border-color: var(--dashboard-border-muted) !important;
             color: var(--dashboard-text) !important;
         }
@@ -565,6 +608,12 @@ def set_global_styles() -> None:
         body [role="option"] * {
             color: var(--dashboard-text) !important;
             -webkit-text-fill-color: var(--dashboard-text) !important;
+        }
+        body [data-baseweb="popover"] svg,
+        body [data-baseweb="menu"] svg,
+        body [data-baseweb="calendar"] svg {
+            color: var(--dashboard-text) !important;
+            fill: var(--dashboard-text) !important;
         }
         body [role="option"],
         body [data-baseweb="menu"] [role="option"],
@@ -588,7 +637,8 @@ def set_global_styles() -> None:
         body [data-baseweb="calendar"] [role="button"],
         body [data-baseweb="calendar"] [role="gridcell"],
         body [data-baseweb="calendar"] [role="columnheader"] {
-            background: transparent !important;
+            background: var(--dashboard-card-bg) !important;
+            background-color: var(--dashboard-card-bg) !important;
             color: var(--dashboard-text) !important;
             -webkit-text-fill-color: var(--dashboard-text) !important;
         }
@@ -597,6 +647,14 @@ def set_global_styles() -> None:
         body [data-baseweb="calendar"] [aria-selected="true"],
         body [data-baseweb="calendar"] [aria-current="date"] {
             background: var(--dashboard-control-selected) !important;
+            background-color: var(--dashboard-control-selected) !important;
+            color: var(--dashboard-control-text) !important;
+            -webkit-text-fill-color: var(--dashboard-control-text) !important;
+        }
+        body [data-baseweb="calendar"] [aria-selected="true"],
+        body [data-baseweb="calendar"] [aria-selected="true"] *,
+        body [data-baseweb="calendar"] [aria-current="date"],
+        body [data-baseweb="calendar"] [aria-current="date"] * {
             color: var(--dashboard-control-text) !important;
             -webkit-text-fill-color: var(--dashboard-control-text) !important;
         }
