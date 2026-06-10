@@ -2025,6 +2025,11 @@ def realtime_risk_charts(
                 plot_bgcolor: theme.plot,
                 font: { color: theme.text, family: "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" },
                 hovermode: "x unified",
+                hoverlabel: {
+                    bgcolor: theme.card,
+                    bordercolor: theme.border,
+                    font: { color: theme.text },
+                },
                 legend: {
                     orientation: "h",
                     x: 0,
@@ -3061,6 +3066,11 @@ def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFra
                 plot_bgcolor: "rgba(0,0,0,0)",
                 font: { color: theme.text, family: "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" },
                 hovermode: "x unified",
+                hoverlabel: {
+                    bgcolor: theme.card,
+                    bordercolor: theme.border,
+                    font: { color: theme.text },
+                },
                 legend: { orientation: "h", x: 0, y: -0.18, font: { color: theme.text, size: 12 } },
                 shapes: guides.shapes,
                 annotations: guides.annotations,
@@ -3235,11 +3245,12 @@ def realtime_backtesting_panel(
             color: var(--text);
             font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
             margin: 0;
-            overflow: hidden;
+            overflow: visible;
         }
         .bt-wrap {
             display: grid;
             gap: 1rem;
+            padding-bottom: 1rem;
         }
         .metric-grid {
             display: grid;
@@ -3280,11 +3291,11 @@ def realtime_backtesting_panel(
             border: 1px solid var(--border);
             border-radius: 12px;
             box-shadow: 0 12px 28px var(--shadow);
-            overflow: hidden;
+            overflow: visible;
             padding: 0.65rem;
         }
         .chart {
-            height: 460px;
+            height: 540px;
             width: 100%;
         }
         @media (max-width: 980px) {
@@ -3503,12 +3514,17 @@ def realtime_backtesting_panel(
         function baseLayout(title, yTitle) {
             return {
                 title: { text: title, font: { color: theme.text, size: 18 } },
-                height: 460,
-                margin: { l: 58, r: 22, t: 62, b: 90 },
+                height: 540,
+                margin: { l: 64, r: 28, t: 68, b: 96 },
                 paper_bgcolor: "rgba(0,0,0,0)",
                 plot_bgcolor: "rgba(0,0,0,0)",
                 font: { color: theme.text, family: "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" },
                 hovermode: "x unified",
+                hoverlabel: {
+                    bgcolor: theme.card,
+                    bordercolor: theme.border,
+                    font: { color: theme.text },
+                },
                 legend: { orientation: "h", x: 0, y: -0.2, font: { color: theme.text, size: 12 } },
                 xaxis: { type: "date", gridcolor: theme.grid, tickfont: { color: theme.text } },
                 yaxis: {
@@ -3643,7 +3659,7 @@ def realtime_backtesting_panel(
     for placeholder, value in replacements.items():
         html = html.replace(placeholder, value)
 
-    st.iframe(html, height=820)
+    st.iframe(html, height=1180)
 
 
 def metric_grid(items: list[dict[str, Any]], columns_per_row: int = 3) -> None:

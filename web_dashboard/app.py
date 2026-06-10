@@ -588,11 +588,12 @@ def _render_historical_forecast_replay(price_demo_df: pd.DataFrame) -> None:
         st.markdown("**Simulation Controls**")
         control_left, control_right = st.columns(2)
         with control_left:
-            horizon_label = st.selectbox(
+            horizon_label = st.radio(
                 "Select Horizon",
                 options=["1D", "3D", "7D"],
                 index=0,
                 key="backtesting_simulation_horizon",
+                horizontal=True,
                 width="stretch",
             )
             st.caption("Options: 1D, 3D, 7D")
@@ -605,16 +606,43 @@ def _render_historical_forecast_replay(price_demo_df: pd.DataFrame) -> None:
             return
 
         with control_right:
-            selected_origin = st.date_input(
+            default_origin_text = pd.Timestamp(origin_dates[-1]).strftime("%Y/%m/%d")
+            selected_origin_text = st.text_input(
                 "Select Start Date",
-                value=origin_dates[-1],
-                min_value=origin_dates[0],
-                max_value=origin_dates[-1],
-                key=f"backtesting_simulation_start_date_{horizon_days}",
-                format="YYYY/MM/DD",
+                value=default_origin_text,
+                key=f"backtesting_simulation_start_date_text_{horizon_days}",
+                help=(
+                    "Use YYYY/MM/DD. Available range: "
+                    f"{pd.Timestamp(origin_dates[0]).strftime('%Y/%m/%d')} to "
+                    f"{pd.Timestamp(origin_dates[-1]).strftime('%Y/%m/%d')}."
+                ),
                 width="stretch",
             )
-            st.caption("Historical simulation start date")
+            selected_origin_ts = pd.to_datetime(selected_origin_text, errors="coerce")
+            if pd.isna(selected_origin_ts):
+                st.warning("Please use a valid YYYY/MM/DD date.")
+                selected_origin = origin_dates[-1]
+            else:
+                selected_origin_date = selected_origin_ts.date()
+                if selected_origin_date < origin_dates[0]:
+                    selected_origin = origin_dates[0]
+                    st.caption(f"Adjusted to earliest available date: {pd.Timestamp(selected_origin).strftime('%Y/%m/%d')}")
+                elif selected_origin_date > origin_dates[-1]:
+                    selected_origin = origin_dates[-1]
+                    st.caption(f"Adjusted to latest available date: {pd.Timestamp(selected_origin).strftime('%Y/%m/%d')}")
+                else:
+                    selected_origin = selected_origin_date
+                    if selected_origin not in origin_dates:
+                        nearest_origin = min(
+                            origin_dates,
+                            key=lambda date: abs(pd.Timestamp(date) - pd.Timestamp(selected_origin)),
+                        )
+                        selected_origin = nearest_origin
+                        st.caption(
+                            f"Nearest available simulation date: {pd.Timestamp(selected_origin).strftime('%Y/%m/%d')}"
+                        )
+                    else:
+                        st.caption("Historical simulation start date")
 
     replay_rows = _historical_simulation_rows(replay_df, selected_origin, horizon_days)
     if replay_rows.empty:
