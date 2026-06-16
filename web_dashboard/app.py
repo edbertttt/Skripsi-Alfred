@@ -605,20 +605,29 @@ def _render_historical_forecast_replay(price_demo_df: pd.DataFrame) -> None:
             return
 
         with control_right:
-            selected_origin = st.selectbox(
+            selected_origin_input = st.date_input(
                 "Select Start Date",
-                options=origin_dates,
-                index=len(origin_dates) - 1,
-                format_func=lambda value: pd.Timestamp(value).strftime("%Y/%m/%d"),
-                key=f"backtesting_simulation_start_date_select_{horizon_days}",
+                value=origin_dates[-1],
+                min_value=origin_dates[0],
+                max_value=origin_dates[-1],
+                key=f"backtesting_simulation_start_date_picker_{horizon_days}",
                 help=(
                     "Available range: "
                     f"{pd.Timestamp(origin_dates[0]).strftime('%Y/%m/%d')} to "
                     f"{pd.Timestamp(origin_dates[-1]).strftime('%Y/%m/%d')}."
                 ),
+                format="YYYY/MM/DD",
                 width="stretch",
             )
-            st.caption("Historical simulation start date")
+            selected_origin = selected_origin_input
+            if selected_origin not in origin_dates:
+                selected_origin = min(
+                    origin_dates,
+                    key=lambda date: abs(pd.Timestamp(date) - pd.Timestamp(selected_origin_input)),
+                )
+                st.caption(f"Nearest available simulation date: {pd.Timestamp(selected_origin).strftime('%Y/%m/%d')}")
+            else:
+                st.caption("Historical simulation start date")
 
     replay_rows = _historical_simulation_rows(replay_df, selected_origin, horizon_days)
     if replay_rows.empty:

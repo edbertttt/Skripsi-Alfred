@@ -670,9 +670,67 @@ def set_global_styles() -> None:
         }
         body [data-baseweb="calendar"] [aria-disabled="true"],
         body [data-baseweb="calendar"] [disabled] {
+            background: transparent !important;
+            background-color: transparent !important;
             color: var(--dashboard-muted) !important;
             opacity: 0.48 !important;
             -webkit-text-fill-color: var(--dashboard-muted) !important;
+        }
+        body [data-baseweb="calendar"] {
+            border: 1px solid var(--dashboard-border-muted) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 20px 48px var(--dashboard-shadow) !important;
+            overflow: hidden !important;
+        }
+        body [data-baseweb="calendar"] table,
+        body [data-baseweb="calendar"] thead,
+        body [data-baseweb="calendar"] tbody,
+        body [data-baseweb="calendar"] tr,
+        body [data-baseweb="calendar"] th,
+        body [data-baseweb="calendar"] td {
+            background: transparent !important;
+            background-color: transparent !important;
+            color: var(--dashboard-text) !important;
+        }
+        body [data-baseweb="calendar"] [role="grid"],
+        body [data-baseweb="calendar"] [role="row"],
+        body [data-baseweb="calendar"] [role="gridcell"],
+        body [data-baseweb="calendar"] [role="gridcell"] > div,
+        body [data-baseweb="calendar"] [role="gridcell"] span,
+        body [data-baseweb="calendar"] [role="button"],
+        body [data-baseweb="calendar"] button {
+            background: transparent !important;
+            background-color: transparent !important;
+            color: var(--dashboard-text) !important;
+            -webkit-text-fill-color: var(--dashboard-text) !important;
+        }
+        body [data-baseweb="calendar"] [role="gridcell"]:hover,
+        body [data-baseweb="calendar"] [role="gridcell"]:hover *,
+        body [data-baseweb="calendar"] button:hover,
+        body [data-baseweb="calendar"] button:hover * {
+            background: var(--dashboard-control-hover) !important;
+            background-color: var(--dashboard-control-hover) !important;
+            color: var(--dashboard-control-text) !important;
+            -webkit-text-fill-color: var(--dashboard-control-text) !important;
+        }
+        body [data-baseweb="calendar"] [aria-selected="true"],
+        body [data-baseweb="calendar"] [aria-selected="true"] *,
+        body [data-baseweb="calendar"] [aria-current="date"],
+        body [data-baseweb="calendar"] [aria-current="date"] * {
+            background: var(--dashboard-control-selected) !important;
+            background-color: var(--dashboard-control-selected) !important;
+            color: var(--dashboard-control-text) !important;
+            -webkit-text-fill-color: var(--dashboard-control-text) !important;
+        }
+        body [data-baseweb="calendar"] [aria-disabled="true"],
+        body [data-baseweb="calendar"] [aria-disabled="true"] *,
+        body [data-baseweb="calendar"] [disabled],
+        body [data-baseweb="calendar"] [disabled] * {
+            background: transparent !important;
+            background-color: transparent !important;
+            color: var(--dashboard-muted) !important;
+            -webkit-text-fill-color: var(--dashboard-muted) !important;
+            opacity: 0.58 !important;
         }
         [data-baseweb="popover"],
         [data-baseweb="popover"] > div,
