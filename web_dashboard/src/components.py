@@ -670,8 +670,8 @@ def set_global_styles() -> None:
         }
         body [data-baseweb="calendar"] [aria-disabled="true"],
         body [data-baseweb="calendar"] [disabled] {
-            background: transparent !important;
-            background-color: transparent !important;
+            background: var(--dashboard-card-bg) !important;
+            background-color: var(--dashboard-card-bg) !important;
             color: var(--dashboard-muted) !important;
             opacity: 0.48 !important;
             -webkit-text-fill-color: var(--dashboard-muted) !important;
@@ -726,11 +726,37 @@ def set_global_styles() -> None:
         body [data-baseweb="calendar"] [aria-disabled="true"] *,
         body [data-baseweb="calendar"] [disabled],
         body [data-baseweb="calendar"] [disabled] * {
-            background: transparent !important;
-            background-color: transparent !important;
+            background: var(--dashboard-card-bg) !important;
+            background-color: var(--dashboard-card-bg) !important;
             color: var(--dashboard-muted) !important;
             -webkit-text-fill-color: var(--dashboard-muted) !important;
-            opacity: 0.58 !important;
+            opacity: 0.72 !important;
+        }
+        body [data-baseweb="calendar"] td:empty,
+        body [data-baseweb="calendar"] [role="gridcell"]:empty,
+        body [data-baseweb="calendar"] [role="gridcell"] > div:empty,
+        body [data-baseweb="calendar"] [role="gridcell"] > span:empty,
+        body [data-baseweb="calendar"] [aria-hidden="true"],
+        body [data-baseweb="calendar"] [aria-hidden="true"] *,
+        body [data-baseweb="calendar"] [aria-label=""],
+        body [data-baseweb="calendar"] [aria-label=""] * {
+            background: var(--dashboard-card-bg) !important;
+            background-color: var(--dashboard-card-bg) !important;
+            box-shadow: none !important;
+        }
+        body [data-baseweb="calendar"] [role="gridcell"]::before,
+        body [data-baseweb="calendar"] [role="gridcell"]::after,
+        body [data-baseweb="calendar"] [role="gridcell"] > div::before,
+        body [data-baseweb="calendar"] [role="gridcell"] > div::after {
+            background: var(--dashboard-card-bg) !important;
+            background-color: var(--dashboard-card-bg) !important;
+        }
+        body [data-baseweb="calendar"] [aria-selected="true"]::before,
+        body [data-baseweb="calendar"] [aria-selected="true"]::after,
+        body [data-baseweb="calendar"] [aria-selected="true"] *::before,
+        body [data-baseweb="calendar"] [aria-selected="true"] *::after {
+            background: var(--dashboard-control-selected) !important;
+            background-color: var(--dashboard-control-selected) !important;
         }
         [data-baseweb="popover"],
         [data-baseweb="popover"] > div,
