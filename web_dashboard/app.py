@@ -588,11 +588,12 @@ def _render_historical_forecast_replay(price_demo_df: pd.DataFrame) -> None:
         st.markdown("**Simulation Controls**")
         control_left, control_right = st.columns(2)
         with control_left:
-            horizon_label = st.selectbox(
+            horizon_label = st.radio(
                 "Select Horizon",
                 options=["1D", "3D", "7D"],
                 index=0,
                 key="backtesting_simulation_horizon",
+                horizontal=True,
                 width="stretch",
             )
             st.caption("Options: 1D, 3D, 7D")
