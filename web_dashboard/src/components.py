@@ -556,6 +556,7 @@ def set_global_styles() -> None:
         [data-testid="stDateInput"] [data-baseweb="input"] *,
         [data-testid="stTextInput"] [data-baseweb="input"] *,
         [data-testid="stNumberInput"] [data-baseweb="input"] *,
+        [data-testid="stSelectbox"] input,
         [data-testid="stDateInput"] input,
         [data-testid="stTextInput"] input,
         [data-testid="stNumberInput"] input {
@@ -587,6 +588,10 @@ def set_global_styles() -> None:
         body [data-baseweb="menu"] div,
         body [data-baseweb="menu"] ul,
         body [data-baseweb="menu"] li,
+        body [data-baseweb="select-dropdown"],
+        body [data-baseweb="select-dropdown"] div,
+        body [data-baseweb="select-dropdown"] ul,
+        body [data-baseweb="select-dropdown"] li,
         body [data-baseweb="calendar"],
         body [data-baseweb="calendar"] > div,
         body [data-baseweb="calendar"] div,
@@ -603,6 +608,7 @@ def set_global_styles() -> None:
         }
         body [data-baseweb="popover"] *,
         body [data-baseweb="menu"] *,
+        body [data-baseweb="select-dropdown"] *,
         body [data-baseweb="calendar"] *,
         body [role="listbox"] *,
         body [role="option"] * {
@@ -611,6 +617,7 @@ def set_global_styles() -> None:
         }
         body [data-baseweb="popover"] svg,
         body [data-baseweb="menu"] svg,
+        body [data-baseweb="select-dropdown"] svg,
         body [data-baseweb="calendar"] svg {
             color: var(--dashboard-text) !important;
             fill: var(--dashboard-text) !important;
@@ -622,13 +629,16 @@ def set_global_styles() -> None:
             background: var(--dashboard-card-bg) !important;
             color: var(--dashboard-text) !important;
             -webkit-text-fill-color: var(--dashboard-text) !important;
+            min-height: 36px;
         }
         body [role="option"]:hover,
         body [role="option"][aria-selected="true"],
         body [role="option"][aria-current="true"],
         body [data-highlighted="true"],
         body [data-baseweb="menu"] [role="option"]:hover,
-        body [data-baseweb="popover"] [role="option"]:hover {
+        body [data-baseweb="popover"] [role="option"]:hover,
+        body [data-baseweb="select-dropdown"] [role="option"]:hover,
+        body [data-baseweb="select-dropdown"] [role="option"][aria-selected="true"] {
             background: var(--dashboard-control-hover) !important;
             color: var(--dashboard-control-text) !important;
             -webkit-text-fill-color: var(--dashboard-control-text) !important;
@@ -667,15 +677,18 @@ def set_global_styles() -> None:
         [data-baseweb="popover"],
         [data-baseweb="popover"] > div,
         [data-baseweb="menu"],
+        [data-baseweb="select-dropdown"],
         [data-baseweb="calendar"],
         ul[role="listbox"],
         div[role="listbox"] {
             background: var(--dashboard-card-bg) !important;
+            background-color: var(--dashboard-card-bg) !important;
             border-color: var(--dashboard-border-muted) !important;
             color: var(--dashboard-text) !important;
         }
         [data-baseweb="popover"] *,
         [data-baseweb="menu"] *,
+        [data-baseweb="select-dropdown"] *,
         [data-baseweb="calendar"] *,
         li[role="option"],
         div[role="option"] {
@@ -688,6 +701,7 @@ def set_global_styles() -> None:
         div[aria-selected="true"] {
             background: var(--dashboard-control-hover) !important;
             color: var(--dashboard-control-text) !important;
+            -webkit-text-fill-color: var(--dashboard-control-text) !important;
         }
         .price-chart-title {
             color: var(--dashboard-text);
