@@ -354,9 +354,10 @@ def render_about() -> None:
                 <div class="about-title">{escape(THESIS_TITLE)}</div>
                 <div class="about-list">
                     {_about_row("Author", AUTHOR)}
+                    {_about_row("NIM", "2602186150")}
                     {_about_row("Research Object", "Bitcoin BTCUSDT daily data")}
                     {_about_row("Data Source", "Binance BTCUSDT daily market data")}
-                    {_about_row("Program Context", "Computer Science and Statistics")}
+                    {_about_row("Program", "Computer Science & Statistics")}
                 </div>
             </div>
             <div class="about-card">
