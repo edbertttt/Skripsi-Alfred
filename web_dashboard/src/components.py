@@ -1886,12 +1886,15 @@ def realtime_risk_charts(
     <div class="chart-grid">
         <section class="chart-card chart-card-main">
             <div id="risk-chart" class="chart chart-main"></div>
+            <p class="chart-caption">This chart compares realized loss with the selected VaR and CVaR thresholds. Breach markers indicate dates when realized loss exceeds the VaR line.</p>
         </section>
         <section class="chart-card">
             <div id="return-chart" class="chart"></div>
+            <p class="chart-caption">This chart shows daily Bitcoin log returns, which are the main return series used for volatility and risk modeling.</p>
         </section>
         <section class="chart-card">
             <div id="vol-chart" class="chart"></div>
+            <p class="chart-caption">This chart compares realized volatility with the selected model sigma to show how estimated risk changes over time.</p>
         </section>
         <section class="chart-card chart-card-main">
             <div class="table-title">Daily Risk Summary</div>
@@ -1946,6 +1949,13 @@ def realtime_risk_charts(
         }
         .chart-main {
             height: 560px;
+        }
+        .chart-caption {
+            color: var(--muted);
+            font-size: 0.9rem;
+            font-weight: 650;
+            line-height: 1.45;
+            margin: 0.1rem 0 0.55rem;
         }
         .table-title {
             color: var(--text);
@@ -2487,7 +2497,7 @@ def realtime_risk_charts(
     for placeholder, value in replacements.items():
         html = html.replace(placeholder, value)
 
-    st.iframe(html, height=1060)
+    st.iframe(html, height=1130)
 
 
 def realtime_forecast_panel(forecast_df: pd.DataFrame, price_demo_df: pd.DataFrame, model: str) -> None:
@@ -3323,8 +3333,14 @@ def realtime_backtesting_panel(
     <div class="bt-wrap">
         <div id="metric-cards" class="metric-grid"></div>
         <div class="chart-grid">
-            <section class="panel"><div id="bt-risk-chart" class="chart"></div></section>
-            <section class="panel"><div id="bt-breach-chart" class="chart"></div></section>
+            <section class="panel">
+                <div id="bt-risk-chart" class="chart"></div>
+                <p class="chart-caption">This chart compares realized loss with each model's VaR at the selected confidence level. A breach occurs when realized loss is above the VaR line.</p>
+            </section>
+            <section class="panel">
+                <div id="bt-breach-chart" class="chart"></div>
+                <p class="chart-caption">This chart marks the dates when VaR breaches occur for the selected confidence level, making the timing of failed risk coverage visible.</p>
+            </section>
         </div>
     </div>
 
@@ -3395,6 +3411,13 @@ def realtime_backtesting_panel(
         .chart {
             height: 540px;
             width: 100%;
+        }
+        .chart-caption {
+            color: var(--muted);
+            font-size: 0.9rem;
+            font-weight: 650;
+            line-height: 1.45;
+            margin: 0.15rem 0 0.35rem;
         }
         @media (max-width: 980px) {
             .metric-grid,
@@ -3757,7 +3780,7 @@ def realtime_backtesting_panel(
     for placeholder, value in replacements.items():
         html = html.replace(placeholder, value)
 
-    st.iframe(html, height=1180)
+    st.iframe(html, height=1240)
 
 
 def metric_grid(items: list[dict[str, Any]], columns_per_row: int = 3) -> None:

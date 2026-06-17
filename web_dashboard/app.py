@@ -209,9 +209,15 @@ def render_models_diagnostics(filters: dict[str, Any]) -> None:
                 "MS-GARCH transition matrix is not available.",
             )
         render_plotly(charts.high_vol_probability_chart(_preferred_ms_probability(), DATA["risk"]))
-        note("Higher probability indicates stronger evidence that Bitcoin returns are in the high volatility regime.")
+        note(
+            "This chart shows the probability that Bitcoin is in the high-volatility regime. "
+            "Higher values indicate stronger evidence of stressed or unstable market conditions."
+        )
         render_plotly(charts.ms_state_volatility_chart(DATA["ms_state_vol"]))
-        note("The state volatility paths describe the conditional risk level implied by each MS-GARCH regime.")
+        note(
+            "This chart compares the volatility levels implied by the low- and high-volatility MS-GARCH regimes, "
+            "showing how model-based risk changes across states."
+        )
 
     with sv_tab:
         st.markdown(
@@ -226,8 +232,8 @@ def render_models_diagnostics(filters: dict[str, Any]) -> None:
         )
         render_plotly(charts.sv_latent_volatility_chart(DATA["sv_latent"]))
         note(
-            "The latent volatility path summarizes posterior volatility estimates. If available, the band shows "
-            "the 95% credible interval."
+            "This chart shows the posterior estimate of latent volatility from the SV model. "
+            "The shaded band represents uncertainty around the estimated volatility path when available."
         )
 
     with diagnostics_tab:
