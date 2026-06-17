@@ -160,4 +160,4 @@ def _friendly_error(resource: str, exc: Exception) -> str:
         reason = "request timed out"
     else:
         reason = "request failed"
-    return f"Live Binance {resource} unavailable ({reason})."
+    return f"Live Binance {resource} could not be retrieved ({reason})."
