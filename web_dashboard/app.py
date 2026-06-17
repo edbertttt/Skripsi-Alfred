@@ -168,8 +168,10 @@ def render_models_diagnostics(filters: dict[str, Any]) -> None:
     with overview_tab:
         st.markdown(
             """
-            BTCUSDT OHLCV -> preprocessing -> log return -> ARMA mean filtering ->
-            MS-GARCH and Stochastic Volatility -> VaR/CVaR -> out-of-sample backtesting.
+            The workflow starts from BTCUSDT OHLCV data from Binance. The data is cleaned and converted into
+            daily log returns, then an ARMA model is used to filter the mean component before MS-GARCH and
+            Stochastic Volatility estimate the volatility process. The volatility estimates are then converted
+            into VaR and CVaR measures and evaluated through out-of-sample backtesting.
             """
         )
         st.caption(
@@ -192,7 +194,10 @@ def render_models_diagnostics(filters: dict[str, Any]) -> None:
 
     with ms_tab:
         st.markdown(
-            "MS-GARCH captures two volatility regimes: a low volatility state and a high volatility state."
+            "MS-GARCH stands for Markov-Switching Generalized Autoregressive Conditional Heteroskedasticity. "
+            "This model is used to capture Bitcoin volatility under different market regimes, especially low "
+            "volatility and high volatility states, so the analysis can summarize regime probabilities, "
+            "conditional volatility, and risk measures such as VaR and CVaR."
         )
         col1, col2 = st.columns(2)
         with col1:
@@ -209,7 +214,11 @@ def render_models_diagnostics(filters: dict[str, Any]) -> None:
         note("The state volatility paths describe the conditional risk level implied by each MS-GARCH regime.")
 
     with sv_tab:
-        st.markdown("Stochastic Volatility treats volatility as a latent stochastic process.")
+        st.markdown(
+            "Stochastic Volatility (SV) models volatility as an unobserved latent process that changes over time. "
+            "It is used as an alternative volatility model to estimate Bitcoin risk dynamics, summarize posterior "
+            "parameters, and compare the latent volatility path with the MS-GARCH volatility estimates."
+        )
         render_table(
             DATA["sv_params"],
             "SV Posterior Parameter Summary",
