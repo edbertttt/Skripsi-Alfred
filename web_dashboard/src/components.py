@@ -470,6 +470,160 @@ def set_global_styles() -> None:
             font-weight: 750 !important;
             -webkit-text-fill-color: var(--dashboard-primary) !important;
         }
+        /* Radio controls used by Streamlit Cloud */
+        [data-testid="stRadio"] input[type="radio"] {
+            height: 1px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            position: absolute !important;
+            width: 1px !important;
+        }
+
+        [data-testid="stRadio"] label > div:first-child:has(input[type="radio"]),
+        [data-testid="stRadio"] div[role="radio"] > div:first-child,
+        [data-testid="stRadio"] div[role="radiogroup"] > div > div:first-child:has(input[type="radio"]) {
+            display: none !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] {
+            align-items: stretch !important;
+            background: transparent !important;
+            border: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 0.55rem !important;
+            overflow: visible !important;
+            width: 100% !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label,
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div[role="radio"],
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]) {
+            align-items: center !important;
+            background: transparent !important;
+            border: 1px solid transparent !important;
+            border-radius: 14px !important;
+            box-shadow: none !important;
+            color: var(--dashboard-text) !important;
+            cursor: pointer !important;
+            display: flex !important;
+            justify-content: flex-start !important;
+            margin: 0 !important;
+            min-height: 54px !important;
+            padding: 0.78rem 1rem 0.78rem 1.35rem !important;
+            position: relative !important;
+            transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, color 150ms ease, transform 150ms ease !important;
+            width: 100% !important;
+            -webkit-text-fill-color: var(--dashboard-text) !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label::before,
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div[role="radio"]::before,
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"])::before {
+            background: transparent;
+            border-radius: 999px;
+            content: "";
+            height: 28px;
+            left: 0.48rem;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label:hover,
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div[role="radio"]:hover,
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]):hover {
+            background: var(--dashboard-control-hover) !important;
+            border-color: var(--dashboard-border) !important;
+            transform: translateX(2px);
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked),
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div[role="radio"][aria-checked="true"],
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div[data-checked="true"],
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked) {
+            background: var(--dashboard-control-selected) !important;
+            border-color: color-mix(in srgb, var(--dashboard-primary) 55%, var(--dashboard-border-muted)) !important;
+            box-shadow: 0 14px 30px var(--dashboard-shadow) !important;
+            color: var(--dashboard-primary) !important;
+            -webkit-text-fill-color: var(--dashboard-primary) !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked)::before,
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div[role="radio"][aria-checked="true"]::before,
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div[data-checked="true"]::before,
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked)::before {
+            background: var(--dashboard-primary);
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] p,
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] span {
+            color: inherit !important;
+            opacity: 1 !important;
+            -webkit-text-fill-color: inherit !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) p,
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div[role="radio"][aria-checked="true"] p,
+        [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked) p {
+            color: var(--dashboard-primary) !important;
+            font-weight: 800 !important;
+            -webkit-text-fill-color: var(--dashboard-primary) !important;
+        }
+
+        [data-testid="stMain"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]),
+        section.main [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]),
+        .main [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]),
+        div[data-testid="stVerticalBlockBorderWrapper"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]) {
+            align-items: center !important;
+            background: var(--dashboard-control-bg) !important;
+            border: 0 !important;
+            border-right: 1px solid var(--dashboard-border-muted) !important;
+            border-radius: 0 !important;
+            box-sizing: border-box !important;
+            color: var(--dashboard-control-text) !important;
+            cursor: pointer !important;
+            display: flex !important;
+            justify-content: center !important;
+            margin: 0 !important;
+            min-height: 44px !important;
+            padding: 0.62rem 0.72rem !important;
+            width: 100% !important;
+            -webkit-text-fill-color: var(--dashboard-control-text) !important;
+        }
+
+        [data-testid="stMain"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]):last-child,
+        section.main [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]):last-child,
+        .main [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]):last-child,
+        div[data-testid="stVerticalBlockBorderWrapper"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]):last-child {
+            border-right: 0 !important;
+        }
+
+        [data-testid="stMain"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked),
+        section.main [data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked),
+        .main [data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked),
+        div[data-testid="stVerticalBlockBorderWrapper"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input:checked),
+        [data-testid="stMain"] [data-testid="stRadio"] div[role="radio"][data-checked="true"],
+        section.main [data-testid="stRadio"] div[role="radio"][data-checked="true"],
+        .main [data-testid="stRadio"] div[role="radio"][data-checked="true"],
+        div[data-testid="stVerticalBlockBorderWrapper"] [data-testid="stRadio"] div[role="radio"][data-checked="true"] {
+            background: var(--dashboard-control-selected) !important;
+            box-shadow: inset 0 0 0 1px var(--dashboard-primary) !important;
+            color: var(--dashboard-primary) !important;
+            -webkit-text-fill-color: var(--dashboard-primary) !important;
+        }
+
+        [data-testid="stMain"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]) *,
+        section.main [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]) *,
+        .main [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]) *,
+        div[data-testid="stVerticalBlockBorderWrapper"] [data-testid="stRadio"] div[role="radiogroup"] > div:has(input[type="radio"]) * {
+            background: transparent !important;
+            color: inherit !important;
+            opacity: 1 !important;
+            -webkit-text-fill-color: inherit !important;
+        }
+
         [data-testid="stSegmentedControl"] button {
             background: var(--dashboard-control-bg) !important;
             border-color: var(--dashboard-border-muted) !important;
